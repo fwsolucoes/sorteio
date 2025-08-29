@@ -1,0 +1,46 @@
+html.dark {
+  /* Border Rounded */
+  --rounded-inputs: 6px;
+  --rounded-cards: 8px;
+
+  /* Background */
+  --background: #18181b;
+  --background-foreground: #27272a;
+
+  /* Modal, Drawer, Popover */
+  --card: #27272a;
+  --card-foreground-primary: #333338;
+  --card-foreground-secondary: #3f3f46;
+
+  /* Input, Select, Textarea, Button (outline), Icon Button (outline) */
+  --input-background: 51, 51, 56; /* #333338 */
+
+  /* Skeleton */
+  --skeleton: #333338;
+  --skeleton-foreground: #3f3f46;
+
+  /* Text */
+  --text-heading: #fafafa;
+  --text-body: #d4d4d8;
+  --text-muted: #71717a;
+
+  /* Border */
+  --border: #3f3f46;
+
+  /* Tooltip */
+  --tooltip-text: #f4f4f5;
+  --tooltip-background: #3f3f46;
+
+  /* Spotlight */
+  --spotlight-primary: 17, 109, 220; /* #116ddc */
+  --spotlight-success: 16, 185, 129; /* #10b981 */
+  --spotlight-danger: 244, 63, 94; /* #f43f5e */
+  --spotlight-info: 14, 165, 233; /* #0ea5e9 */
+  --spotlight-warning: 249, 115, 22; /* #f97316 */
+
+  /* Toast */
+  --toast-success: 16, 185, 129; /* #10B981 */
+  --toast-danger: 225, 29, 72; /* #E11D48 */
+  --toast-info: 14, 165, 233; /* #0EA5E9 */
+  --toast-warning: 251, 146, 60; /* #FB923C */
+}
