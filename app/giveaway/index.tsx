@@ -1,53 +1,94 @@
-import { useEffect, useState } from "react";
-import { styled } from "@linaria/react";
-import { useFetcher } from "react-router";
-import { Button, Container, Input, SuccessBox, Title } from "./styles";
+import { useState } from "react";
+import { Container, SuccessBox, Title } from "./styles";
 
-export async function action({ request }: { request: Request }) {
-  const formData = await request.formData();
-  const payload = {
-    name: formData.get("name"),
-    city: formData.get("city"),
-    state: formData.get("state"),
-    email: formData.get("email"),
-  };
+import { brazilianStates } from "@arkyn/templates";
 
-  const response = await fetch("https://sua-api.com/sorteio", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    throw new Error("Erro ao enviar inscrição");
-  }
-
-  const data = await response.json();
-  return { numero: data.numero };
-}
+import {
+  Button,
+  FieldLabel,
+  FieldWrapper,
+  FormProvider,
+  Input,
+  PhoneInput,
+} from "@arkyn/components";
+import { Select } from "~/components/Select";
+import giveawayImage from "./giveaway-image.svg";
+import { type FormDataType, formSchema } from "./schema";
 
 function Giveaway() {
-  const fetcher = useFetcher<{ numero?: number }>();
   const [drawnNumber, setDrawnNumber] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof FormDataType, string>>
+  >({});
 
-  useEffect(() => {
-    const saved = localStorage.getItem("drawn_number");
-    if (saved) {
-      setDrawnNumber(Number(saved));
-    }
-  }, []);
+  const apiUrl =
+    "https://micro-oracao-play-dev.vw6wo7.easypanel.host/draw/participant/public/create";
 
-  // Salva quando a API retornar
-  useEffect(() => {
-    if (fetcher.data?.numero) {
-      localStorage.setItem("sorteio_numero", String(fetcher.data.numero));
-      setDrawnNumber(fetcher.data.numero);
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    console.log("aqui");
+    event.preventDefault();
+    setError(null);
+    setLoading(true);
+    setFieldErrors({});
+
+    const formData = new FormData(event.currentTarget);
+    const values = {
+      name: String(formData.get("name") || ""),
+      city: String(formData.get("city") || ""),
+      state: String(formData.get("state") || ""),
+      email: String(formData.get("email") || ""),
+      phone: String(formData.get("phone") || ""),
+      country: String(formData.get("country") || ""),
+    };
+
+    const parseResult = formSchema.safeParse(values);
+    if (!parseResult.success) {
+      const errors: Partial<Record<keyof FormDataType, string>> = {};
+      parseResult.error.issues.forEach((err) => {
+        const field = err.path[0] as keyof FormDataType;
+        errors[field] = err.message;
+      });
+      setFieldErrors(errors);
+      setLoading(false);
+      return;
     }
-  }, [fetcher.data]);
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parseResult.data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao enviar inscrição");
+      }
+
+      const data = await response.json();
+
+      console.log(data);
+      setDrawnNumber(data.numero);
+    } catch (err) {
+      setError("Não foi possível enviar sua participação. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Container>
-      <Title>Participe do Sorteio</Title>
+      <img
+        src={giveawayImage}
+        alt="Sorteio Frei Gilson 40 dias com São Miguel
+          "
+      />
+      <Title>SORTEIO 40 DIAS COM SÃO MIGUEL</Title>
+      <span className="description">
+        Participe do sorteio para rezar o Rosário com Frei Gilson no dia 05 de
+        setembro preenchendo o formulário abaixo:
+      </span>
 
       {drawnNumber ? (
         <SuccessBox>
@@ -57,18 +98,30 @@ function Giveaway() {
           </p>
         </SuccessBox>
       ) : (
-        <fetcher.Form method="post">
-          <Input type="text" name="name" placeholder="Nome" required />
-          <Input type="text" name="city" placeholder="Cidade" required />
-          <Input type="text" name="state" placeholder="Estado" required />
-          <Input type="email" name="email" placeholder="Email" required />
+        <FormProvider
+          form={<form onSubmit={handleSubmit} />}
+          fieldErrors={fieldErrors}
+        >
+          <Input type="text" label="Nome" name="name" showAsterisk />
+          <Input type="email" label="E-mail" name="email" showAsterisk />
+          <PhoneInput label="Número de telefone" name="phone" showAsterisk />
+          <Input type="text" label="Cidade" name="city" showAsterisk />
+          <FieldWrapper>
+            <FieldLabel>Estado</FieldLabel>
+            <Select name="state" options={brazilianStates} />
+          </FieldWrapper>
+          <Input
+            type="text"
+            label="País"
+            defaultValue="Brasil"
+            name="country"
+            showAsterisk
+          />
 
-          <Button type="submit" disabled={fetcher.state === "submitting"}>
-            {fetcher.state === "submitting"
-              ? "Enviando..."
-              : "Participar do sorteio"}
+          <Button type="submit" disabled={loading}>
+            {loading ? "Enviando..." : "Participar do sorteio"}
           </Button>
-        </fetcher.Form>
+        </FormProvider>
       )}
     </Container>
   );

@@ -4,16 +4,42 @@ const Container = styled.div`
   max-width: 600px;
   margin: 32px auto;
   padding: 32px;
-  border-radius: var(--rounded-cards);
+  border-radius: 16px;
   background: var(--background);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+
+  .description {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: var(--text-body);
+
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    width: 100%;
+    /* min-width: max-content; */
+  }
+
+  .arkynButton {
+    margin-top: 24px;
+  }
 `;
 
 const Title = styled.h1`
-  font-size: 1.6rem;
-  font-weight: bold;
-  margin-bottom: 16px;
+  font-size: 1.5rem; //24px
+  font-weight: 700;
   text-align: center;
+  color: var(--text-heading);
 `;
 
 const SuccessBox = styled.div`
