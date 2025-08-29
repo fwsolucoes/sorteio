@@ -23,12 +23,14 @@ function Giveaway() {
     Partial<Record<keyof FormDataType, string>>
   >({});
 
-  const apiUrl =
-    "https://micro-oracao-play-dev.vw6wo7.easypanel.host/draw/participant/public/create";
+  const apiUrl = import.meta.env.API_URL;
+
+  console.log(apiUrl);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    console.log("aqui");
+    console.log("aquiasdfasdf");
     event.preventDefault();
+    console.log("aqui2");
     setError(null);
     setLoading(true);
     setFieldErrors({});
@@ -44,6 +46,11 @@ function Giveaway() {
     };
 
     const parseResult = formSchema.safeParse(values);
+
+    console.log("teste", {
+      draw_id: "0198a3b3-0c8f-7a60-99f1-90df18e73022",
+      ...parseResult.data,
+    });
     if (!parseResult.success) {
       const errors: Partial<Record<keyof FormDataType, string>> = {};
       parseResult.error.issues.forEach((err) => {
@@ -56,11 +63,14 @@ function Giveaway() {
     }
 
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parseResult.data),
-      });
+      const response = await fetch(
+        `https://micro-oracao-play-dev.vw6wo7.easypanel.host/draw/participant/public/create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(parseResult.data),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Erro ao enviar inscrição");
