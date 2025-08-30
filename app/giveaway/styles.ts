@@ -31,7 +31,6 @@ const Container = styled.div`
     gap: 8px;
 
     width: 100%;
-    /* min-width: max-content; */
   }
 
   .arkynButton {
