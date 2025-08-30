@@ -13,6 +13,10 @@ const Container = styled.div`
   align-items: center;
   gap: 32px;
 
+  img {
+    max-width: 100%;
+  }
+
   .description {
     font-size: 1.125rem;
     font-weight: 400;
@@ -32,6 +36,13 @@ const Container = styled.div`
 
   .arkynButton {
     margin-top: 24px;
+  }
+
+  @media (max-width: 650px) {
+    max-width: calc(100vw - 16px);
+    margin: 8px auto;
+
+    padding: 16px;
   }
 `;
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, SuccessBox, Title } from "./styles";
 
 import { brazilianStates } from "@arkyn/templates";
@@ -23,14 +23,8 @@ function Giveaway() {
     Partial<Record<keyof FormDataType, string>>
   >({});
 
-  const apiUrl = import.meta.env.API_URL;
-
-  console.log(apiUrl);
-
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    console.log("aquiasdfasdf");
     event.preventDefault();
-    console.log("aqui2");
     setError(null);
     setLoading(true);
     setFieldErrors({});
@@ -47,10 +41,11 @@ function Giveaway() {
 
     const parseResult = formSchema.safeParse(values);
 
-    console.log("teste", {
+    const bodyData = {
       draw_id: "0198a3b3-0c8f-7a60-99f1-90df18e73022",
       ...parseResult.data,
-    });
+    };
+
     if (!parseResult.success) {
       const errors: Partial<Record<keyof FormDataType, string>> = {};
       parseResult.error.issues.forEach((err) => {
@@ -68,7 +63,7 @@ function Giveaway() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(parseResult.data),
+          body: JSON.stringify(bodyData),
         }
       );
 
