@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Container, SuccessBox, Title } from "./styles";
 
 import { brazilianStates } from "@arkyn/templates";
@@ -57,15 +57,14 @@ function Giveaway() {
       return;
     }
 
+    const apiUrl = import.meta.env.VITE_API_URL;
+
     try {
-      const response = await fetch(
-        `https://micro-oracao-play-dev.vw6wo7.easypanel.host/draw/participant/public/create`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(bodyData),
-        }
-      );
+      const response = await fetch(`${apiUrl}/draw/participant/public/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
+      });
 
       if (!response.ok) {
         throw new Error("Erro ao enviar inscrição");
