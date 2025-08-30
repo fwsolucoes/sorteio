@@ -10,16 +10,20 @@ import {
 } from "@arkyn/components";
 import { brazilianStates } from "@arkyn/templates";
 import { Select } from "~/components/Select";
-import type { Route } from "../+types/root";
 import giveawayImage from "./giveaway-image.svg";
 import { Container, SuccessBox, Title } from "./styles";
+
+type ActionData = {
+  fieldErrors?: Record<string, string>;
+  luckyNumber?: string;
+  error?: string;
+};
 
 function Giveaway() {
   const navigation = useNavigation();
 
-  const fieldErrors = useActionData()?.fieldErrors;
-  const drawnNumber = null;
-  const error = null;
+  const actionData = useActionData<ActionData>();
+  const { fieldErrors, luckyNumber: drawnNumber, error } = actionData ?? {};
 
   const loading = navigation.state !== "idle";
 

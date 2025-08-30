@@ -46,12 +46,13 @@ export async function action({ request }: Route.ActionArgs) {
     if (!response.ok) throw new Error("Erro ao enviar inscrição");
 
     const data = await response.json();
-    return JSON.stringify({ success: true, numero: data.numero });
+
+    return { success: true, luckyNumber: data.lucky_number };
   } catch {
-    return JSON.stringify({
+    return {
       success: false,
       error: "Não foi possível enviar sua participação.",
-    });
+    };
   }
 }
 
