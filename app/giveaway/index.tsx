@@ -73,7 +73,7 @@ function Giveaway() {
       const data = await response.json();
 
       console.log(data);
-      setDrawnNumber(data.numero);
+      setDrawnNumber(data.lucky_number);
     } catch (err) {
       setError("Não foi possível enviar sua participação. Tente novamente.");
     } finally {
