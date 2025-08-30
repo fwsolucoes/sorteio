@@ -1,6 +1,7 @@
 import type { Route } from "./+types/home";
 import { Giveaway } from "../giveaway/index";
 import { formSchema, type FormDataType } from "~/giveaway/schema";
+import { decodeRequestBody } from "@arkyn/server";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -14,18 +15,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
+  const body = await decodeRequestBody(request);
 
-  const values = {
-    name: String(formData.get("name") || ""),
-    city: String(formData.get("city") || ""),
-    state: String(formData.get("state") || ""),
-    email: String(formData.get("email") || ""),
-    phone: String(formData.get("phone") || ""),
-    country: String(formData.get("country") || ""),
-  };
-
-  const parseResult = formSchema.safeParse(values);
+  const parseResult = formSchema.safeParse(body);
 
   if (!parseResult.success) {
     const errors: Partial<Record<keyof FormDataType, string>> = {};
@@ -42,15 +34,14 @@ export async function action({ request }: Route.ActionArgs) {
     ...parseResult.data,
   };
 
+  const apiUrl = process.env.API_URL;
+
   try {
-    const response = await fetch(
-      `https://micro-oracao-play-dev.vw6wo7.easypanel.host/draw/participant/public/create`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
-      }
-    );
+    const response = await fetch(`${apiUrl}/draw/participant/public/create`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bodyData),
+    });
 
     if (!response.ok) throw new Error("Erro ao enviar inscrição");
 
