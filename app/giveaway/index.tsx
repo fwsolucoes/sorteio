@@ -13,7 +13,11 @@ import {
 } from "@arkyn/components";
 import { Select } from "~/components/Select";
 import giveawayImage from "./giveaway-image.svg";
+import googlePlay from "./google-play-availability.svg";
+import appStore from "./app-store-availability.svg";
+import donationImage from "./donation-image.svg";
 import { type FormDataType, formSchema } from "./schema";
+import { Link } from "react-router";
 
 function Giveaway() {
   const [drawnNumber, setDrawnNumber] = useState<number | null>(null);
@@ -72,7 +76,7 @@ function Giveaway() {
 
       const data = await response.json();
 
-      console.log(data);
+      console.log("cliente", data);
       setDrawnNumber(data.lucky_number);
     } catch (err) {
       setError("Não foi possível enviar sua participação. Tente novamente.");
@@ -83,24 +87,74 @@ function Giveaway() {
 
   return (
     <Container>
-      <img
-        src={giveawayImage}
-        alt="Sorteio Frei Gilson 40 dias com São Miguel
-          "
-      />
-      <Title>SORTEIO 40 DIAS COM SÃO MIGUEL</Title>
-      <span className="description">
-        Participe do sorteio para rezar o Rosário com Frei Gilson no dia 05 de
-        setembro preenchendo o formulário abaixo:
-      </span>
+      {!drawnNumber && (
+        <>
+          <img
+            src={giveawayImage}
+            alt="Sorteio Frei Gilson 40 dias com São Miguel"
+          />
+          <Title>SORTEIO 40 DIAS COM SÃO MIGUEL</Title>
+          <span className="description">
+            Participe do sorteio para rezar o Rosário com Frei Gilson no dia 05
+            de setembro preenchendo o formulário abaixo:
+          </span>
+        </>
+      )}
 
       {drawnNumber ? (
-        <SuccessBox>
-          <p>🎉 Obrigado por participar!</p>
-          <p>
-            Seu número de participação é: <strong>{drawnNumber}</strong>
-          </p>
-        </SuccessBox>
+        <>
+          <SuccessBox>
+            <p>🎉 Obrigado por participar!</p>
+            <p>
+              Seu número de participação é: <strong>{drawnNumber}</strong>
+            </p>
+          </SuccessBox>
+
+          <div className="oracaoPlayDownload">
+            <p style={{ marginTop: "16px", textAlign: "center" }}>
+              Aproveite e baixe o aplicativo <strong>Oração Play</strong>:
+            </p>
+
+            <div className="buttonLinks">
+              <Link
+                to={
+                  "https://play.google.com/store/apps/details?id=org.carmelitasmensageiros.benfeitor&hl=pt_BR&pli=1"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={googlePlay} alt="Google play download" />
+              </Link>
+              <Link
+                to={
+                  "https://apps.apple.com/br/app/ora%C3%A7%C3%A3o-play-carmelitas/id1436660924"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={appStore} alt="Google play download" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="donationBanner">
+            <div className="message">
+              <img src={donationImage} alt="donation image" />
+              <span>
+                Torne-se um(a) benfeitor(a) dos Freis Carmelitas Mensageiros! É
+                com a sua contribuição que podemos continuar essa obra e levar o
+                Evangelho a todos!
+              </span>
+            </div>
+            <Link
+              to={"https://doacoes.sancton.com.br/project/seja-um-mensageiro"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button type="button">Contribua aqui</Button>
+            </Link>
+          </div>
+        </>
       ) : (
         <FormProvider
           form={<form onSubmit={handleSubmit} />}

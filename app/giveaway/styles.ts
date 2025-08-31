@@ -37,6 +37,43 @@ const Container = styled.div`
     margin-top: 24px;
   }
 
+  .oracaoPlayDownload {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    color: var(--text-body);
+
+    .buttonLinks {
+      display: flex;
+      gap: 16px;
+    }
+  }
+
+  .donationBanner {
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    padding: 16px;
+
+    text-align: center;
+
+    .message {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      color: var(--text-body);
+    }
+
+    .arkynButton {
+      width: 100%;
+    }
+  }
+
   @media (max-width: 650px) {
     max-width: calc(100vw - 16px);
     margin: 8px auto;
