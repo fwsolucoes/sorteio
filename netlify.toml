@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"   # ajuste se for yarn/pnpm
+  publish = "dist"            # "build" para CRA, "dist" para Vite
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
