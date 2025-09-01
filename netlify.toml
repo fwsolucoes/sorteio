@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"   # ajuste se for yarn/pnpm
-  publish = "dist"            # "build" para CRA, "dist" para Vite
+  publish = "public"            # "build" para CRA, "dist" para Vite
 
 [[redirects]]
   from = "/*"
